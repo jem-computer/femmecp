@@ -1,6 +1,11 @@
 {
-	"permissions": {
-		"allow": ["Bash(bun add:*)", "Bash(bun remove:*)", "Bash(bun run lint:*)"],
-		"deny": []
-	}
+  "permissions": {
+    "allow": [
+      "Bash(bun add:*)",
+      "Bash(bun remove:*)",
+      "Bash(bun run lint:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": []
+  }
 }

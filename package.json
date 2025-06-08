@@ -1,5 +1,5 @@
 {
-	"name": "fastmcp-boilerplate",
+	"name": "femmecp",
 	"version": "1.0.0",
 	"main": "dist/index.js",
 	"scripts": {
@@ -10,15 +10,15 @@
 		"test": "vitest run",
 		"format": "biome format --write . && biome check --write ."
 	},
-	"keywords": ["fastmcp", "mcp", "boilerplate"],
+	"keywords": ["fastmcp", "mcp", "hrt", "estradiol"],
 	"repository": {
-		"url": "https://github.com/punkpeye/fastmcp-boilerplate"
+		"url": "https://github.com/jem-computer/femmecp"
 	},
-	"author": "Frank Fiegel <frank@glama.ai>",
-	"homepage": "https://glama.ai/mcp",
+	"author": "Jem Computer <591643+jem-computer@users.noreply.github.com>",
+	"homepage": "https://github.com/jem-computer/femmecp",
 	"type": "module",
 	"license": "MIT",
-	"description": "A boilerplate for FastMCP",
+	"description": "do androids dream of electric estradiol?",
 	"dependencies": {
 		"fastmcp": "^1.27.3",
 		"zod": "^3.24.4"
