@@ -4,7 +4,7 @@
 
 ## Phase 1: Core Tools ⚡
 - [x] Install estrannaise dependency
-- [ ] Implement `simulate_estradiol_levels` tool
+- [x] Implement `simulate_estradiol_levels` tool
 - [ ] Implement `get_model_parameters` tool
 - [ ] Add basic validation and error handling
 

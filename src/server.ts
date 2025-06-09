@@ -1,4 +1,5 @@
 import { FastMCP } from "fastmcp";
+import { getModelParametersTool } from "./tools/getModelParameters.js";
 import { simulateEstradiolLevelsTool } from "./tools/simulateEstradiolLevels.js";
 
 const server = new FastMCP({
@@ -9,6 +10,7 @@ const server = new FastMCP({
 });
 
 server.addTool(simulateEstradiolLevelsTool);
+server.addTool(getModelParametersTool);
 
 server.start({
 	transportType: "stdio",
