@@ -1,8 +1,8 @@
-# femmecp
+# FemmeCP
 
-do androids dream of electric estradiol?
+> do androids dream of electric estradiol?
 
-This MCP server is a good starting point for building an MCP server. It includes a basic setup for testing, linting, formatting, and publishing to NPM.
+help i trans'd AGI :uwu:
 
 ## Development
 

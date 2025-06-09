@@ -1,9 +1,9 @@
-# femmecp TODO
+# FemmeCP TODO
 
 *do androids dream of electric estradiol?*
 
 ## Phase 1: Core Tools ⚡
-- [ ] Install estrannaise dependency
+- [x] Install estrannaise dependency
 - [ ] Implement `simulate_estradiol_levels` tool
 - [ ] Implement `get_model_parameters` tool
 - [ ] Add basic validation and error handling

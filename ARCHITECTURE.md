@@ -1,12 +1,12 @@
-# femmecp Architecture Plan
+# FemmeCP Architecture Plan
 
-*do androids dream of electric estradiol?*
+> do androids dream of electric estradiol?
 
 An MCP server that wraps [estrannaise](https://github.com/jem-computer/estrannaise) - a simulator/calculator for feminizing hormone replacement therapy.
 
 ## Core Concept
 
-femmecp provides an MCP interface to estrannaise's 3-compartment pharmacokinetic models for estradiol simulation, making complex hormone therapy calculations accessible to LLMs and other tools.
+FemmeCP provides an MCP interface to estrannaise's 3-compartment pharmacokinetic models for estradiol simulation, making complex hormone therapy calculations accessible to LLMs and other tools.
 
 ## Architecture Overview
 
