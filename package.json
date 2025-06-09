@@ -1,11 +1,12 @@
 {
 	"name": "femmecp",
-	"version": "1.0.0",
+	"version": "0.0.1",
 	"main": "dist/index.js",
 	"scripts": {
 		"build": "tsc",
 		"start": "tsx src/server.ts",
 		"dev": "fastmcp dev src/server.ts",
+		"inspect": "fastmcp inspect src/server.ts",
 		"lint": "biome check . && tsc --noEmit",
 		"test": "vitest run",
 		"format": "biome format --write . && biome check --write ."
@@ -20,6 +21,7 @@
 	"license": "MIT",
 	"description": "do androids dream of electric estradiol?",
 	"dependencies": {
+		"estrannaise": "github:WHSAH/estrannaise.js",
 		"fastmcp": "^1.27.3",
 		"zod": "^3.24.4"
 	},
