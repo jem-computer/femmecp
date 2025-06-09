@@ -103,13 +103,20 @@ describe("simulateEstradiolLevelsTool", () => {
 		);
 		const parsedResult = JSON.parse(result as string);
 
-		expect(Array.isArray(parsedResult)).toBe(true);
-		expect(parsedResult).toHaveLength(3); // Should match times array length
+		expect(parsedResult).toHaveProperty("results");
+		expect(parsedResult).toHaveProperty("metadata");
+		expect(Array.isArray(parsedResult.results)).toBe(true);
+		expect(parsedResult.results).toHaveLength(3); // Should match times array length
 
-		for (const [index, point] of parsedResult.entries()) {
+		for (const [index, point] of parsedResult.results.entries()) {
 			expect(point).toHaveProperty("time", input.times[index]);
 			expect(point).toHaveProperty("level", 150.5); // Mocked value
+			expect(point).toHaveProperty("model");
+			expect(point).toHaveProperty("dose");
 		}
+
+		expect(parsedResult.metadata.totalSimulations).toBe(3);
+		expect(parsedResult.metadata.conversionFactor).toBe(1.0);
 	});
 
 	it("should handle single dose scenario", async () => {
@@ -129,8 +136,8 @@ describe("simulateEstradiolLevelsTool", () => {
 		);
 		const parsedResult = JSON.parse(result as string);
 
-		expect(parsedResult).toHaveLength(1);
-		expect(parsedResult[0]).toEqual({
+		expect(parsedResult.results).toHaveLength(1);
+		expect(parsedResult.results[0]).toMatchObject({
 			time: 0,
 			level: 150.5,
 		});
@@ -153,9 +160,9 @@ describe("simulateEstradiolLevelsTool", () => {
 		);
 		const parsedResult = JSON.parse(result as string);
 
-		expect(parsedResult).toHaveLength(2);
-		expect(parsedResult[0].time).toBe(0);
-		expect(parsedResult[1].time).toBe(7);
+		expect(parsedResult.results).toHaveLength(2);
+		expect(parsedResult.results[0].time).toBe(0);
+		expect(parsedResult.results[1].time).toBe(7);
 	});
 
 	it("should format results as valid JSON", async () => {
@@ -179,5 +186,140 @@ describe("simulateEstradiolLevelsTool", () => {
 
 		// Should be formatted (with indentation)
 		expect(result).toContain("  ");
+	});
+
+	it("should reject negative doses", () => {
+		const invalidInput = {
+			time: 24,
+			doses: [-1.0],
+		};
+
+		const result =
+			simulateEstradiolLevelsTool.parameters?.safeParse(invalidInput);
+		expect(result?.success).toBe(false);
+	});
+
+	it("should reject negative times", () => {
+		const invalidInput = {
+			time: 24,
+			times: [-1.0],
+		};
+
+		const result =
+			simulateEstradiolLevelsTool.parameters?.safeParse(invalidInput);
+		expect(result?.success).toBe(false);
+	});
+
+	it("should reject empty arrays", () => {
+		const invalidInput = {
+			time: 24,
+			doses: [],
+		};
+
+		const result =
+			simulateEstradiolLevelsTool.parameters?.safeParse(invalidInput);
+		expect(result?.success).toBe(false);
+	});
+
+	it("should reject negative conversion factor", () => {
+		const invalidInput = {
+			time: 24,
+			conversionFactor: -1.0,
+		};
+
+		const result =
+			simulateEstradiolLevelsTool.parameters?.safeParse(invalidInput);
+		expect(result?.success).toBe(false);
+	});
+
+	it("should warn for significantly mismatched array lengths", async () => {
+		const input = {
+			time: 24,
+			doses: [1.0],
+			times: [0, 7, 14, 21, 28],
+			models: ["EV im"],
+			conversionFactor: 1.0,
+			random: false,
+			intervals: false,
+		};
+
+		const result = await simulateEstradiolLevelsTool.execute(
+			input,
+			mockContext,
+		);
+		const parsedResult = JSON.parse(result as string);
+
+		expect(parsedResult.metadata.warnings).toBeDefined();
+		expect(parsedResult.metadata.warnings[0]).toContain(
+			"array length mismatch",
+		);
+	});
+
+	it("should include warnings for high doses", async () => {
+		const input = {
+			time: 24,
+			doses: [150.0],
+			times: [0],
+			models: ["EV im"],
+			conversionFactor: 1.0,
+			random: false,
+			intervals: false,
+		};
+
+		const result = await simulateEstradiolLevelsTool.execute(
+			input,
+			mockContext,
+		);
+		const parsedResult = JSON.parse(result as string);
+
+		expect(parsedResult.metadata.warnings).toBeDefined();
+		expect(parsedResult.metadata.warnings[0]).toContain("Very high dose");
+	});
+
+	it("should include warnings for zero doses", async () => {
+		const input = {
+			time: 24,
+			doses: [0, 1.0],
+			times: [0, 7],
+			models: ["EV im", "EV im"],
+			conversionFactor: 1.0,
+			random: false,
+			intervals: false,
+		};
+
+		const result = await simulateEstradiolLevelsTool.execute(
+			input,
+			mockContext,
+		);
+		const parsedResult = JSON.parse(result as string);
+
+		expect(parsedResult.metadata.warnings).toBeDefined();
+		expect(parsedResult.metadata.warnings[0]).toContain("Zero dose detected");
+	});
+
+	it("should include metadata in response", async () => {
+		const input = {
+			time: 24,
+			doses: [1.0],
+			times: [0, 1, 2],
+			models: ["EV im"],
+			conversionFactor: 3.6713,
+			random: true,
+			intervals: true,
+		};
+
+		const result = await simulateEstradiolLevelsTool.execute(
+			input,
+			mockContext,
+		);
+		const parsedResult = JSON.parse(result as string);
+
+		expect(parsedResult.metadata).toMatchObject({
+			totalSimulations: 3,
+			conversionFactor: 3.6713,
+			units: "pg/mL × 3.6713",
+			uncertaintyApplied: true,
+			intervalsMode: true,
+		});
 	});
 });
