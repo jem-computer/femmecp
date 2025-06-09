@@ -1,6 +1,6 @@
-import { z } from "zod";
-import type { Tool } from "fastmcp";
 import { e2multidose3C, modelList } from "estrannaise/src/models.js";
+import type { Tool } from "fastmcp";
+import { z } from "zod";
 
 /**
  * Calculate a given set of multi-doses
@@ -17,7 +17,7 @@ import { e2multidose3C, modelList } from "estrannaise/src/models.js";
 const modelNames = Object.keys(modelList) as [string, ...string[]];
 
 const SimulateEstradiolLevelsSchema = z.object({
-	time: z.number().describe("Time offset for dose calculation"),
+	time: z.number().min(0).describe("Time offset for dose calculation"),
 	doses: z.array(z.number()).describe("Dose amounts, in mg").default([1.0]),
 	times: z
 		.array(z.number())
